@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MovieInformation from 'components/MovieInformation/MovieInformation';
+import Loader from 'components/Loader/Loader';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -10,9 +11,10 @@ const MovieDetails = () => {
   const [filmTitle, setFilmTitle] = useState('');
   const [filmVote, setFilmVote] = useState('');
   const [filmOverview, setFilmOverview] = useState('');
-  const [filmGenres, setFilmGenres] = useState([])
+  const [filmGenres, setFilmGenres] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loader, setLoader] = useState(true);
   const responseUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
 
   useEffect(() => {
@@ -28,7 +30,6 @@ const MovieDetails = () => {
       axios
         .get(responseUrl, options)
         .then(response => {
-          console.log(response.data)
           if (response.data.poster_path) {
             setFilmImg(
               `https://image.tmdb.org/t/p/w300${response.data.poster_path}`
@@ -44,27 +45,33 @@ const MovieDetails = () => {
           setFilmOverview(response.data.overview);
           setFilmGenres(response.data.genres);
           setLoading(false);
+          setLoader(false);
         })
         .catch(error => {
           setError(true);
           setLoading(false);
+          setLoader(false);
         });
     }
   }, [loading, responseUrl]);
 
   return (
     <main>
-      {error ? (
-        <>Ops! Not found!</>
-      ) : (
-        <MovieInformation
-          filmImg={filmImg}
-          filmdDate={filmdDate}
-          filmTitle={filmTitle}
-          filmVote={filmVote}
-          filmOverview={filmOverview}
+      {!loader ? (
+        error ? (
+          <>Ops! Not found!</>
+        ) : (
+          <MovieInformation
+            filmImg={filmImg}
+            filmdDate={filmdDate}
+            filmTitle={filmTitle}
+            filmVote={filmVote}
+            filmOverview={filmOverview}
             filmGenres={filmGenres}
-        />
+          />
+        )
+      ) : (
+        <Loader />
       )}
     </main>
   );

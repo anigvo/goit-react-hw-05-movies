@@ -8,7 +8,6 @@ const MovieInformation = ({
   filmVote,
   filmOverview,
   filmGenres,
-
 }) => {
   const releaseYear = new Date(filmdDate).getFullYear();
   return (

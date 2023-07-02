@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Loader from 'components/Loader/Loader';
 
 const Home = () => {
   const [films, setFilms] = useState([]);
+  const [loader, setLoader] = useState(true);
 
   useEffect(() => {
     const options = {
@@ -21,24 +23,31 @@ const Home = () => {
         options
       )
       .then(response => {
-        console.log(response.data.results);
         setFilms(response.data.results);
+        setLoader(false);
       })
       .catch(error => {
         console.error(error);
+        setLoader(false);
       });
   }, []);
 
   return (
-    <ul>
-      {films.map(film => (
-        <li key={film.id}>
-          <Link to={{ pathname: `/movies/${film.id}` }}>
-            {film.name || film.title}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <main>
+      {!loader ? (
+        <ul>
+          {films.map(film => (
+            <li key={film.id}>
+              <Link to={{ pathname: `/movies/${film.id}` }}>
+                {film.name || film.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <Loader />
+      )}
+    </main>
   );
 };
 

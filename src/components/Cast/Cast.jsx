@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Loader from 'components/Loader/Loader';
 
 const Cast = () => {
   const { movieId } = useParams();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cast, setCast] = useState([]);
+  const [loader, setLoader] = useState(true);
   const castUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
-  console.log(cast);
   useEffect(() => {
     if (loading) {
       const options = {
@@ -22,43 +23,47 @@ const Cast = () => {
       axios
         .get(castUrl, options)
         .then(response => {
-          console.log(response.data.cast);
           setCast(response.data.cast);
-
           setLoading(false);
+          setLoader(false);
         })
         .catch(error => {
           setError(true);
           setLoading(false);
+          setLoader(false);
         });
     }
   }, [castUrl, loading]);
 
   return (
     <>
-      {error ? (
-        <>Ops! Not found!</>
-      ) : (
-        <ul>
-          {cast.map(actor => (
-            <li key={actor.id}>
-              {actor.profile_path ? (
-                <img
-                  src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                  alt={actor.original_name}
-                />
-              ) : (
-                <img
-                  src={`https://www.redwaterschool.ca/all_img/default-staff.png`}
-                  alt={actor.original_name}
-                />
-              )}
+      {!loader ? (
+        error ? (
+          <>Ops! Not found!</>
+        ) : (
+          <ul>
+            {cast.map(actor => (
+              <li key={actor.id}>
+                {actor.profile_path ? (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+                    alt={actor.original_name}
+                  />
+                ) : (
+                  <img
+                    src={`https://www.redwaterschool.ca/all_img/default-staff.png`}
+                    alt={actor.original_name}
+                  />
+                )}
 
-              <p>{actor.original_name}</p>
-              <p>Character: {actor.character}</p>
-            </li>
-          ))}
-        </ul>
+                <p>{actor.original_name}</p>
+                <p>Character: {actor.character}</p>
+              </li>
+            ))}
+          </ul>
+        )
+      ) : (
+        <Loader />
       )}
     </>
   );
