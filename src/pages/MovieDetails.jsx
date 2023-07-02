@@ -1,41 +1,73 @@
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import MovieInformation from 'components/MovieInformation/MovieInformation';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
-  const [filmInformation, setFilmInformation] = useState([]);
+  const [filmImg, setFilmImg] = useState(``);
+  const [filmdDate, setFilmDate] = useState('');
+  const [filmTitle, setFilmTitle] = useState('');
+  const [filmVote, setFilmVote] = useState('');
+  const [filmOverview, setFilmOverview] = useState('');
+  const [filmGenres, setFilmGenres] = useState([])
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const responseUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
 
   useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZjBjOWZhNTA0MDcxMTlhOWY3MWZlMTUwMGRjZWUxMCIsInN1YiI6IjY0OWYwODcwNmY2YTk5MDEzYTg5ZjQwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CNFILj_LKfHuzNXrxVFMlOf4mJknB8NFdiCkmm6wFOY',
-      },
-    };
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
-        options
-      )
-      .then(response => {
-        console.log(response.data);
-        setFilmInformation(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [movieId]);
+    if (loading) {
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZjBjOWZhNTA0MDcxMTlhOWY3MWZlMTUwMGRjZWUxMCIsInN1YiI6IjY0OWYwODcwNmY2YTk5MDEzYTg5ZjQwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CNFILj_LKfHuzNXrxVFMlOf4mJknB8NFdiCkmm6wFOY',
+        },
+      };
+      axios
+        .get(responseUrl, options)
+        .then(response => {
+          console.log(response.data)
+          if (response.data.poster_path) {
+            setFilmImg(
+              `https://image.tmdb.org/t/p/w300${response.data.poster_path}`
+            );
+          } else {
+            setFilmImg(
+              `https://www.flagstaff365.com/wp-content/themes/apollo/inc/admin/assets/images/placeholder-1.png`
+            );
+          }
+          setFilmDate(response.data.release_date);
+          setFilmTitle(response.data.original_title);
+          setFilmVote(response.data.vote_average);
+          setFilmOverview(response.data.overview);
+          setFilmGenres(response.data.genres);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError(true);
+          setLoading(false);
+        });
+    }
+  }, [loading, responseUrl]);
 
-  // const getFilmById = filmId => {
-  //   return films.find(film => film.id === filmId);
-  // };
-  // const filmInformation = getFilmById(movieId);
-  // console.log(filmInformation);
-
-  return <div>Film: {filmInformation.id}</div>;
+  return (
+    <main>
+      {error ? (
+        <>Ops! Not found!</>
+      ) : (
+        <MovieInformation
+          filmImg={filmImg}
+          filmdDate={filmdDate}
+          filmTitle={filmTitle}
+          filmVote={filmVote}
+          filmOverview={filmOverview}
+            filmGenres={filmGenres}
+        />
+      )}
+    </main>
+  );
 };
 
 export default MovieDetails;
