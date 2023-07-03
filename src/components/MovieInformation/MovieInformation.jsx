@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const MovieInformation = ({
   filmImg,
@@ -59,3 +60,17 @@ const MovieInformation = ({
 };
 
 export default MovieInformation;
+
+MovieInformation.propTypes = {
+  filmImg: PropTypes.string.isRequired,
+  filmdDate: PropTypes.string.isRequired,
+  filmTitle: PropTypes.string.isRequired,
+  filmVote: PropTypes.number.isRequired,
+  filmOverview: PropTypes.string.isRequired,
+  filmGenres: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};

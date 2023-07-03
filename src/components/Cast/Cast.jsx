@@ -40,6 +40,8 @@ const Cast = () => {
       {!loader ? (
         error ? (
           <>Ops! Not found!</>
+        ) : cast.length === 0 ? (
+          <p>We don't have any actors for this movie.</p>
         ) : (
           <ul>
             {cast.map(actor => (
@@ -55,7 +57,6 @@ const Cast = () => {
                     alt={actor.original_name}
                   />
                 )}
-
                 <p>{actor.original_name}</p>
                 <p>Character: {actor.character}</p>
               </li>
