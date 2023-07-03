@@ -77,7 +77,10 @@ const Movie = () => {
             ) : (
               films.map(film => (
                 <li key={film.id}>
-                  <Link to={{ pathname: `/movies/${film.id}` }}>
+                  <Link
+                    to={{ pathname: `/movies/${film.id}` }}
+                    state={{ from: `/movies?query=${query}` }}
+                  >
                     {film.name || film.title}
                   </Link>
                 </li>

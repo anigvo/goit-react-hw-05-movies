@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MovieInformation from 'components/MovieInformation/MovieInformation';
@@ -16,6 +16,8 @@ const MovieDetails = () => {
   const [loading, setLoading] = useState(true);
   const [loader, setLoader] = useState(true);
   const responseUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+  const location = useLocation();
+  const backLinkHref = location.state?.from ?? '/';
 
   useEffect(() => {
     if (loading) {
@@ -61,14 +63,17 @@ const MovieDetails = () => {
         error ? (
           <>Ops! Not found!</>
         ) : (
-          <MovieInformation
-            filmImg={filmImg}
-            filmdDate={filmdDate}
-            filmTitle={filmTitle}
-            filmVote={filmVote}
-            filmOverview={filmOverview}
-            filmGenres={filmGenres}
-          />
+          <>
+            <Link to={backLinkHref}>Go back</Link>
+            <MovieInformation
+              filmImg={filmImg}
+              filmdDate={filmdDate}
+              filmTitle={filmTitle}
+              filmVote={filmVote}
+              filmOverview={filmOverview}
+              filmGenres={filmGenres}
+            />
+          </>
         )
       ) : (
         <Loader />

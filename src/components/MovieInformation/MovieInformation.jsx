@@ -1,6 +1,7 @@
-import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Loader from 'components/Loader/Loader';
+import { Suspense } from 'react';
 
 const MovieInformation = ({
   filmImg,
@@ -13,7 +14,6 @@ const MovieInformation = ({
   const releaseYear = new Date(filmdDate).getFullYear();
   return (
     <>
-      <button type="button">Go back</button>
       <div>
         <div>
           {filmImg ? (
@@ -54,7 +54,9 @@ const MovieInformation = ({
           </li>
         </ul>
       </div>
-      <Outlet />
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
     </>
   );
 };
