@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Loader from 'components/Loader/Loader';
+import { ListBox, Img, ListItem } from 'pages/Base.styled';
 
 const Cast = () => {
   const { movieId } = useParams();
@@ -43,25 +44,25 @@ const Cast = () => {
         ) : cast.length === 0 ? (
           <p>We don't have any actors for this movie.</p>
         ) : (
-          <ul>
+          <ListBox>
             {cast.map(actor => (
-              <li key={actor.id}>
+              <ListItem key={actor.id}>
                 {actor.profile_path ? (
-                  <img
+                  <Img
                     src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
                     alt={actor.original_name}
                   />
                 ) : (
-                  <img
+                  <Img
                     src={`https://www.redwaterschool.ca/all_img/default-staff.png`}
                     alt={actor.original_name}
                   />
                 )}
                 <p>{actor.original_name}</p>
                 <p>Character: {actor.character}</p>
-              </li>
+              </ListItem>
             ))}
-          </ul>
+          </ListBox>
         )
       ) : (
         <Loader />

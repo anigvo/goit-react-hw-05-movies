@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MovieInformation from 'components/MovieInformation/MovieInformation';
 import Loader from 'components/Loader/Loader';
+import { Main, Button } from 'pages/Base.styled';
+import styled from '@emotion/styled';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -18,6 +20,11 @@ const MovieDetails = () => {
   const responseUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
   const location = useLocation();
   const backLinkHref = location.state?.from ?? '/';
+
+  const ItemLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+  `;
 
   useEffect(() => {
     if (loading) {
@@ -58,13 +65,15 @@ const MovieDetails = () => {
   }, [loading, responseUrl]);
 
   return (
-    <main>
+    <Main>
       {!loader ? (
         error ? (
           <>Ops! Not found!</>
         ) : (
           <>
-            <Link to={backLinkHref}>Go back</Link>
+            <Button>
+              <ItemLink to={backLinkHref}>Go back</ItemLink>
+            </Button>
             <MovieInformation
               filmImg={filmImg}
               filmdDate={filmdDate}
@@ -78,7 +87,7 @@ const MovieDetails = () => {
       ) : (
         <Loader />
       )}
-    </main>
+    </Main>
   );
 };
 

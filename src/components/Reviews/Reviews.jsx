@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Loader from 'components/Loader/Loader';
+import { ListBox, ListItem } from 'pages/Base.styled';
 
 const Reviews = () => {
   const { movieId } = useParams();
@@ -46,14 +47,14 @@ const Reviews = () => {
             {reviews.length === 0 ? (
               <p>We don't have any reviews for this movie.</p>
             ) : (
-              <ul>
+              <ListBox>
                 {reviews.map(review => (
-                  <li key={review.id}>
+                  <ListItem key={review.id}>
                     <h4>Author: {review.author}</h4>
                     <p>{review.content}</p>
-                  </li>
+                  </ListItem>
                 ))}
-              </ul>
+              </ListBox>
             )}
           </>
         )

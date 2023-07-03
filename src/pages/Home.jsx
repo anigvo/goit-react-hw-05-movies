@@ -2,10 +2,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
+import { Main, List } from 'pages/Base.styled';
+import styled from '@emotion/styled';
 
 const Home = () => {
   const [films, setFilms] = useState([]);
   const [loader, setLoader] = useState(true);
+
+  const ItemLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+
+    &:hover,
+    &:focus {
+      color: blue;
+    }
+  `;
 
   useEffect(() => {
     const options = {
@@ -33,24 +45,24 @@ const Home = () => {
   }, []);
 
   return (
-    <main>
+    <Main>
       {!loader ? (
-        <ul>
+        <List>
           {films.map(film => (
             <li key={film.id}>
-              <Link
+              <ItemLink
                 to={{ pathname: `/movies/${film.id}` }}
                 state={{ from: '/' }}
               >
                 {film.name || film.title}
-              </Link>
+              </ItemLink>
             </li>
           ))}
-        </ul>
+        </List>
       ) : (
         <Loader />
       )}
-    </main>
+    </Main>
   );
 };
 

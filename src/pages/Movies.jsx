@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
+import { Main, List, Form, Input, Button } from 'pages/Base.styled';
+import styled from '@emotion/styled';
 
 const Movie = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,6 +12,16 @@ const Movie = () => {
   const [loader, setLoader] = useState(false);
   const [films, setFilms] = useState([]);
   const query = searchParams.get('query') ?? '';
+
+  const ItemLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+
+    &:hover,
+    &:focus {
+      color: blue;
+    }
+  `;
 
   useEffect(() => {
     if (query === '') {
@@ -53,9 +65,9 @@ const Movie = () => {
   const buttonStatus = movie.trim() === '' ? true : false;
 
   return (
-    <main>
-      <form onSubmit={handleSubmit}>
-        <input
+    <Main>
+      <Form onSubmit={handleSubmit}>
+        <Input
           type="text"
           placeholder="Enter movie name"
           name="query"
@@ -63,35 +75,35 @@ const Movie = () => {
           onChange={handleChange}
         />
 
-        <button type="submit" disabled={buttonStatus}>
+        <Button type="submit" disabled={buttonStatus}>
           Search
-        </button>
-      </form>
+        </Button>
+      </Form>
       {!loader ? (
         query === '' ? (
           ''
         ) : (
-          <ul>
+          <List>
             {films.length === 0 ? (
               <p>Ops! Not found films with this name.</p>
             ) : (
               films.map(film => (
                 <li key={film.id}>
-                  <Link
+                  <ItemLink
                     to={{ pathname: `/movies/${film.id}` }}
                     state={{ from: `/movies?query=${query}` }}
                   >
                     {film.name || film.title}
-                  </Link>
+                  </ItemLink>
                 </li>
               ))
             )}
-          </ul>
+          </List>
         )
       ) : (
         <Loader />
       )}
-    </main>
+    </Main>
   );
 };
 

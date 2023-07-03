@@ -2,6 +2,15 @@ import { Link, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Loader from 'components/Loader/Loader';
 import { Suspense } from 'react';
+import {
+  List,
+  TextBox,
+  Box,
+  Img,
+  ImgBox,
+  TextWrapper,
+} from 'pages/Base.styled';
+import styled from '@emotion/styled';
 
 const MovieInformation = ({
   filmImg,
@@ -12,48 +21,59 @@ const MovieInformation = ({
   filmGenres,
 }) => {
   const releaseYear = new Date(filmdDate).getFullYear();
+  const ItemLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+
+    &:hover,
+    &:focus {
+      color: blue;
+    }
+  `;
   return (
     <>
-      <div>
-        <div>
+      <Box>
+        <ImgBox>
           {filmImg ? (
-            <img src={filmImg} alt={filmTitle} />
+            <Img src={filmImg} alt={filmTitle} />
           ) : (
             <p>Ops, image not found</p>
           )}
-        </div>
+        </ImgBox>
 
-        <div>
-          <h1>
-            {filmTitle} ({releaseYear})
-          </h1>
-          <p>User score: {Math.round(filmVote * 10) + `%`}</p>
-        </div>
-        <div>
-          <h2>Overview</h2>
-          <p>{filmOverview}</p>
-        </div>
-        <div>
-          <h3>Genres</h3>
-          <ul>
-            {filmGenres.map(genre => (
-              <li key={genre.id}>{genre.name}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+        <TextWrapper>
+          <div>
+            <h1>
+              {filmTitle} ({releaseYear})
+            </h1>
+            <p>User score: {Math.round(filmVote * 10) + `%`}</p>
+          </div>
+          <div>
+            <h2>Overview</h2>
+            <p>{filmOverview}</p>
+          </div>
+          <div>
+            <h3>Genres</h3>
+            <List>
+              {filmGenres.map(genre => (
+                <li key={genre.id}>{genre.name}</li>
+              ))}
+            </List>
+          </div>
+        </TextWrapper>
+      </Box>
 
-      <div>
+      <TextBox>
         <p>Additional Information</p>
-        <ul>
+        <List>
           <li>
-            <Link to="cast">Cast</Link>
+            <ItemLink to="cast">Cast</ItemLink>
           </li>
           <li>
-            <Link to="reviews">Reviews</Link>
+            <ItemLink to="reviews">Reviews</ItemLink>
           </li>
-        </ul>
-      </div>
+        </List>
+      </TextBox>
       <Suspense fallback={<Loader />}>
         <Outlet />
       </Suspense>
